@@ -1,0 +1,1 @@
+ ~/nod/iree-build-notrace/install/bin/iree-run-module --module=fused_attn.vmfb --function=main --input=@data/fp8/q.npy --input=@data/fp8/k.npy --input=@data/fp8/v.npy --input=@data/fp8/scale.npy --input=@data/fp8/qscale.npy --input=@data/fp8/kscale.npy --input=@data/fp8/vscale.npy --output=@res.npy --device=hip

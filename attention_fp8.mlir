@@ -40,7 +40,15 @@ func.func @main(
     %empty = tensor.empty() : tensor<1x4096x64xf32>
     %c0 = arith.constant 0.0 : f32
     %fill = linalg.fill ins(%c0 : f32) outs(%empty : tensor<1x4096x64xf32>)  -> tensor<1x4096x64xf32>
-    %atten = iree_linalg_ext.attention ins(%qf8, %kf8, %vf8, %qks : tensor<1x4096x64xf8E4M3FNUZ>, tensor<1x4096x64xf8E4M3FNUZ>, tensor<1x4096x64xf8E4M3FNUZ>, f32) outs(%fill : tensor<1x4096x64xf32>) -> tensor<1x4096x64xf32>
+    %atten = iree_linalg_ext.attention {indexing_maps = [affine_map<(d0, d1, d2, d3, d4) -> (d0, d1, d2)>,
+                     affine_map<(d0, d1, d2, d3, d4) -> (d0, d3, d2)>,
+                     affine_map<(d0, d1, d2, d3, d4) -> (d0, d3, d4)>,
+                     affine_map<(d0, d1, d2, d3, d4) -> ()>,
+                     affine_map<(d0, d1, d2, d3, d4) -> (d0, d1, d4)>]}
+                     ins(%qf8, %kf8, %vf8, %qks : tensor<1x4096x64xf8E4M3FNUZ>, tensor<1x4096x64xf8E4M3FNUZ>, tensor<1x4096x64xf8E4M3FNUZ>, f32) outs(%fill : tensor<1x4096x64xf32>) {
+                        ^bb0(%arg0: f32):
+                        iree_linalg_ext.yield %arg0 : f32
+                    } -> tensor<1x4096x64xf32>
 
     %atten_scale = call @scale(%atten, %vscalef32) : (tensor<1x4096x64xf32>, f32) -> tensor<1x4096x64xf32>
 
