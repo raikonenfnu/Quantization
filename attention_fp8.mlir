@@ -5,7 +5,7 @@ func.func private @scale(%arg0 : tensor<1x4096x64xf32>, %arg1 : f32) -> tensor<1
     %empty = tensor.empty() : tensor<1x4096x64xf32>
     %generic = linalg.generic  {
       indexing_maps = [#map0, #map0],
-      iterator_types = ["parallel", "parallel", "parallel"]}      
+      iterator_types = ["parallel", "parallel", "parallel"]}
       ins(%arg0 : tensor<1x4096x64xf32>)
       outs(%empty : tensor<1x4096x64xf32>) {
     ^bb0(%b0 : f32, %b1 : f32):
